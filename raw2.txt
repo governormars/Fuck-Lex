@@ -1,0 +1,20 @@
+#include "svpng.inc"
+#include <math.h> // fminf(), sinf(), cosf()
+#include <stdlib.h> // rand(), RAND_MAX
+/*
+test for a result
+*/
+#define TWO_PI 6.283185          3 0718f
+#define W 512
+#define H 512
+#define N 64
+#define MAX_STEP 10
+#define MAX_DISTANCE 2.0f
+#define EPSILON 1e-6f
+
+unsigned char img[W * H * 3];
+
+float circleSDF(float x, float y, float cx, float cy, float r) {
+    float ux = x - cx, uy = y - cy;
+    return sqrtf(ux * ux + uy * uy) - r;
+}
