@@ -85,11 +85,14 @@ def preprocess():
 
 def save(string):
     if string in keywords.keys():
+        print("<", string, ",", keywords[string], ">")
+    else:
         try:
             float(string)
-            save_const(string)
+            print("<", string, ",", 26, ">")
         except ValueError:
             save_var(string)
+
 
 
 def save_var(string):
@@ -99,23 +102,28 @@ def save_var(string):
         if is_signal(string) == 1:      # ID
             print("<", string, ",", 25, ">")
         else:
-            print("<", string, ",", 26, ">")       # 错误。数字加字母
+            print("<", string, ",", 501, ">")       # 错误。
 
 
-def save_const(string):
-    print("<", string, ",", keywords[string], ">")       # NUM
+# def save_const(string):
+#     print("<", string, ",", keywords[string], ">")
 
 
 def is_signal(s):
-    if s[0] == '_' or s[0] in string.ascii_letters:
+    if s[0] in string.ascii_letters:
         for i in s:
-            if i in string.ascii_letters or i == '_' or i in string.digits:
+            if i in string.ascii_letters or i in string.digits:
                 pass
             else:
                 return 0
         return 1
-    else:
-        return 0
+    elif s[0] in string.digits:
+        for q in s:
+            if q in string.digits:
+                pass
+            else:
+                return 0
+        return 2
 
 
 def analysis():
@@ -130,7 +138,8 @@ def analysis():
                 sign = 0
                 pass
             else:
-                save_var(key)
+                key += i
+                save(key)
                 key = ""
                 sign = 0
         elif i in normal_signal:
@@ -163,7 +172,11 @@ def analysis():
                 key = ""
                 save(i)
         else:
+            if key == '<' or key == '>':
+                save(key)
+                key = ""
             key += i
+            # print(key)
     # for i in signlist.keys():
     #     print("<", signlist[i], ",", i, ">")
 
