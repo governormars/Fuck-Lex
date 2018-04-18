@@ -39,16 +39,16 @@ keywords['+'] = 27
 keywords['-'] = 28
 keywords['*'] = 29
 keywords['/'] = 30
+keywords['>'] = 36
 keywords[':'] = 31
-keywords[':='] = 32
 keywords['<'] = 33
 """
-下面四个符号由于是双字节，所以需要分开判断
+下面符号由于是双字节，需要判断
 """
 ########################################
 keywords['<>'] = 34
 keywords['<='] = 35
-keywords['>'] = 36
+keywords[':='] = 32
 keywords['>='] = 37
 ########################################
 keywords['='] = 38
@@ -82,17 +82,18 @@ def preprocess():
     return
 
 
-
 def save(string):
+    string = string.strip()
     if string in keywords.keys():
         print("<", string, ",", keywords[string], ">")
     else:
         try:
-            float(string)
-            print("<", string, ",", 26, ">")
+            # print(string)
+            num = float(string)               # NUM
+            # print(num)
+            print("<", string, ",", '26(NUM)', ">")
         except ValueError:
             save_var(string)
-
 
 
 def save_var(string):
@@ -100,7 +101,7 @@ def save_var(string):
         pass
     else:
         if is_signal(string) == 1:      # ID
-            print("<", string, ",", 25, ">")
+            print("<", string, ",", '25(ID)', ">")
         else:
             print("<", string, ",", 501, ">")       # 错误。
 
@@ -110,9 +111,10 @@ def save_var(string):
 
 
 def is_signal(s):
-    if s[0] in string.ascii_letters:
+    s = s.strip()
+    if s[0] in string.ascii_letters+' ':
         for i in s:
-            if i in string.ascii_letters or i in string.digits:
+            if i in string.ascii_letters or i in string.digits+' ':
                 pass
             else:
                 return 0
@@ -131,7 +133,7 @@ def analysis():
         charlist = f3.read()
         key = ""
         sign = 0
-    normal_signal = ['+', '-', '*', '/', ';', '(', ')', '#']
+    normal_signal = ['+', '-', '*', '/', ';', '(', ')', '#', '[', ']', '{', '}']
     for i in charlist:
         if i == ' ':
             if len(key.strip()) < 0:
@@ -143,7 +145,7 @@ def analysis():
                 key = ""
                 sign = 0
         elif i in normal_signal:
-            save_var(key)
+            save(key)
             key = ""
             save(i)
             sign = 0
