@@ -43,6 +43,10 @@ keywords['>'] = 36
 keywords[':'] = 31
 keywords['<'] = 33
 """
+下面符号实验中未定义的额外标识符
+"""
+keywords[','] = 50
+"""
 下面符号由于是双字节，需要判断
 """
 ########################################
@@ -85,13 +89,13 @@ def preprocess():
 def save(string):
     string = string.strip()
     if string in keywords.keys():
-        print("<", string, ",", keywords[string], ">")
+        print("<", keywords[string], ",", string, ">")
     else:
         try:
             # print(string)
             num = float(string)               # NUM
             # print(num)
-            print("<", string, ",", '26(NUM)', ">")
+            print("<", '26(NUM)', ",", string, ">")
         except ValueError:
             save_var(string)
 
@@ -101,9 +105,9 @@ def save_var(string):
         pass
     else:
         if is_signal(string) == 1:      # ID
-            print("<", string, ",", '25(ID)', ">")
+            print("<", '25(ID)', ",", string, ">")
         else:
-            print("<", string, ",", 501, ">")       # 错误。
+            print("<", 'error501', ",", string, ">")       # 错误。
 
 
 # def save_const(string):
@@ -133,7 +137,7 @@ def analysis():
         charlist = f3.read()
         key = ""
         sign = 0
-    normal_signal = ['+', '-', '*', '/', ';', '(', ')', '#', '[', ']', '{', '}']
+    normal_signal = ['+', '-', '*', '/', ';', '(', ')', '#', '[', ']', '{', '}', ',']
     for i in charlist:
         if i == ' ':
             if len(key.strip()) < 0:
